@@ -19,7 +19,7 @@ const Gallery = () => {
   const [shares, setShares] = useState(new Array(initialPhotos.length).fill(0));
   const fileInputRef = useRef(null);
 
-  const handlePhotoUpload = (e) => {
+  const handlePhotoUpload = (e: { target: { files: any[] } }) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -36,13 +36,13 @@ const Gallery = () => {
     fileInputRef.current.click();
   };
 
-  const handleLike = (index) => {
+  const handleLike = (index: number) => {
     setLikes((prevLikes) =>
       prevLikes.map((likeCount, i) => (i === index ? likeCount + 1 : likeCount))
     );
   };
 
-  const handleShare = (index) => {
+  const handleShare = (index: number) => {
     setShares((prevShares) =>
       prevShares.map((shareCount, i) =>
         i === index ? shareCount + 1 : shareCount
