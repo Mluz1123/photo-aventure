@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ChangeEvent, MouseEvent } from "react";
 import HeartShare from "./HeartShare";
 
-const initialPhotos = [
+// Definición de tipos para las fotos
+type Photo = string;
+
+const initialPhotos: Photo[] = [
   "https://img.freepik.com/foto-gratis/cascada-erawan-tailandia-hermosa-cascada-piscina-esmeralda-naturaleza_335224-776.jpg?t=st=1722998043~exp=1723001643~hmac=9b5eada3658729236e0ab2ae24801c21fbbb1685973be559efcff9d88e196945&w=1800",
   "https://img.freepik.com/foto-gratis/disparo-vertical-pasaje-madera-sobre-pequeno-lago-reflectante-cordillera-horizonte_181624-37099.jpg?t=st=1722998069~exp=1723001669~hmac=9e18133e2c3bd8057469ddff0a1a986449b44099f7d467d6a57a73672636e0a9&w=740",
   "https://img.freepik.com/foto-gratis/disparo-vertical-carretera-magnificas-montanas-cielo-azul-capturado-california_181624-44891.jpg?t=st=1722997460~exp=1723001060~hmac=64ceee8ff00ff1eb3fe6debd8513637d2f0d09ccb406c66ba7c34f2116509e9a&w=740",
@@ -13,18 +16,24 @@ const initialPhotos = [
   "https://img.freepik.com/foto-gratis/atleta-masculino-sosteniendo-medalla_23-2148990963.jpg?t=st=1722998308~exp=1723001908~hmac=9b18f6952b4cb4ead0ac4ca00787075fc61179fce41582da0f1ecb515226ae5b&w=1800",
 ];
 
-const Gallery = () => {
-  const [photos, setPhotos] = useState(initialPhotos);
-  const [likes, setLikes] = useState(new Array(initialPhotos.length).fill(0));
-  const [shares, setShares] = useState(new Array(initialPhotos.length).fill(0));
-  const fileInputRef = useRef(null);
+const Gallery: React.FC = () => {
+  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+  const [likes, setLikes] = useState<number[]>(
+    new Array(initialPhotos.length).fill(0)
+  );
+  const [shares, setShares] = useState<number[]>(
+    new Array(initialPhotos.length).fill(0)
+  );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handlePhotoUpload = (e: { target: { files: any[] } }) => {
-    const file = e.target.files[0];
+  const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      setPhotos([...photos, reader.result]);
+      if (reader.result) {
+        setPhotos([...photos, reader.result as string]);
+      }
     };
 
     if (file) {
@@ -32,8 +41,8 @@ const Gallery = () => {
     }
   };
 
-  const handleUploadClick = () => {
-    fileInputRef.current.click();
+  const handleUploadClick = (e: MouseEvent<HTMLDivElement>) => {
+    fileInputRef.current?.click();
   };
 
   const handleLike = (index: number) => {
@@ -56,7 +65,7 @@ const Gallery = () => {
         Captura momentos especiales y compartelos en esta gran comunidad.
       </h2>
       <div
-        className="w-24 h-24  flex items-center justify-center cursor-pointer mb-4 rounded-md border-blue-500 border-dashed border-2"
+        className="w-24 h-24 flex items-center justify-center cursor-pointer mb-4 rounded-md border-blue-500 border-dashed border-2"
         onClick={handleUploadClick}
       >
         <svg

@@ -1,19 +1,37 @@
-// components/HeartShare.js
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const HeartShare = ({ onLike, likeCount, onShare, shareCount }) => {
-  const [liked, setLiked] = useState(false);
-  const [shared, setShared] = useState(false);
+// Definición de tipos para las props
+interface HeartShareProps {
+  onLike: (liked: boolean) => void;
+  likeCount: number;
+  onShare: (shared: boolean) => void;
+  shareCount: number;
+}
+
+const HeartShare: React.FC<HeartShareProps> = ({
+  onLike,
+  likeCount,
+  onShare,
+  shareCount,
+}) => {
+  const [liked, setLiked] = useState<boolean>(false);
+  const [shared, setShared] = useState<boolean>(false);
 
   const handleLikeClick = () => {
-    setLiked(!liked);
-    onLike(!liked);
+    setLiked((prevLiked) => {
+      const newLiked = !prevLiked;
+      onLike(newLiked);
+      return newLiked;
+    });
   };
 
   const handleShareClick = () => {
-    setShared(!shared);
-    onShare(!shared);
+    setShared((prevShared) => {
+      const newShared = !prevShared;
+      onShare(newShared);
+      return newShared;
+    });
   };
 
   return (
